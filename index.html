@@ -231,7 +231,7 @@ footer a { color: inherit; }
     app.innerHTML =
       (eProssima ? '' : '<button class="back" id="back" type="button">← Torna alla prossima partita</button>') +
       '<article class="ticket' + (eProssima ? '' : ' other') + '" aria-label="' + (eProssima ? "Prossima partita" : "Partita selezionata") + '">' +
-        '<svg class="lake" viewBox="0 0 100 140" aria-hidden="true"><path class="w" d="M55 5C51 20 58 33 53 48C50 58 51 65 50 72"/><path class="w" d="M50 72C43 85 35 92 31 104C27 116 21 124 16 134"/><path class="w" d="M50 72C59 85 65 95 69 107C72 117 75 124 78 132"/><circle class="dot" cx="69" cy="99" r="4.5"/><text x="58" y="90" text-anchor="end">Mandello</text></svg>' +
+        '<svg class="lake" viewBox="0 0 100 140" aria-hidden="true"><path class="w" d="M55 5C51 20 58 33 53 48C50 58 51 65 50 72"/><path class="w" d="M50 72C43 85 35 92 31 104C27 116 21 124 16 134"/><path class="w" d="M50 72C59 85 65 95 69 107C72 117 75 124 78 132"/><circle class="dot" cx="69" cy="99" r="4.5"/><title>Lago di Como, Mandello del Lario</title></svg>' +
         '<div class="eyebrow">' + (eProssima ? "Prossima partita" : "Partita selezionata") + (p.giornata ? ' <span class="pill">' + p.giornata + 'ª giornata</span>' : '') +
           ' <span class="pill">' + (p.in_casa ? icoHome + "In casa" : icoPlane + "Trasferta") + '</span></div>' +
         '<h2 class="when">' + esc(quando(p._d, ora)) + ' · ' + hhmm(p._d) +
