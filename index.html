@@ -23,9 +23,9 @@
   --court: #1c2d5e;          /* blu sociale */
   --court-ink: #fbf3e1;
   --accent: #ee8b3a;         /* arancio pallone */
-  --alert-bg: #fde5cc;
-  --alert-ink: #6e3205;
-  --alert-edge: #ee8b3a;
+  --alert-bg: #ee8b3a;
+  --alert-ink: #131d3d;
+  --alert-edge: #131d3d;
   --home: #1c2d5e;
   --away: #c25a12;
   --lake: #fbf3e1;
@@ -37,7 +37,7 @@
   :root:not([data-theme="light"]) {
     --bg: #0d1428; --surface: #161f3b; --ink: #f4ecda; --muted: #a8afc4; --line: #29355a;
     --court: #22386f; --court-ink: #fbf3e1; --accent: #f39a4f;
-    --alert-bg: #3a230f; --alert-ink: #ffd3a8; --alert-edge: #f39a4f;
+    --alert-bg: #f39a4f; --alert-ink: #131d3d; --alert-edge: #fbf3e1;
     --home: #9fb6f5; --away: #f5a462; --lake: #fbf3e1;
     color-scheme: dark;
   }
@@ -45,7 +45,7 @@
 :root[data-theme="dark"] {
   --bg: #0d1428; --surface: #161f3b; --ink: #f4ecda; --muted: #a8afc4; --line: #29355a;
   --court: #22386f; --court-ink: #fbf3e1; --accent: #f39a4f;
-  --alert-bg: #3a230f; --alert-ink: #ffd3a8; --alert-edge: #f39a4f;
+  --alert-bg: #f39a4f; --alert-ink: #131d3d; --alert-edge: #fbf3e1;
   --home: #9fb6f5; --away: #f5a462; --lake: #fbf3e1;
   color-scheme: dark;
 }
@@ -81,6 +81,10 @@ header { display: flex; justify-content: space-between; align-items: center; gap
 .lake { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); height: 92%; aspect-ratio: 628 / 926; z-index: 0; pointer-events: none; }
 .lake .w { position: absolute; inset: 0; background: var(--lake); opacity: .2; -webkit-mask: url(assets/lago-como.png) center / contain no-repeat; mask: url(assets/lago-como.png) center / contain no-repeat; }
 .lake .dot { position: absolute; left: 65.9%; top: 71.6%; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 2px var(--court); }
+.where { justify-self: start; display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px 6px 11px; border-radius: 10px; font: 800 1.25rem/1 var(--f-display); letter-spacing: .06em; text-transform: uppercase; }
+.where svg { width: 20px; height: 20px; }
+.where.home { background: var(--court-ink); color: var(--court); }
+.where.away { background: var(--accent); color: #131d3d; }
 .ticket > :not(.lake) { position: relative; z-index: 1; }
 .ticket { border-bottom: 5px solid var(--accent); }
 .eyebrow { font-size: .74rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; opacity: .85; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
@@ -105,7 +109,8 @@ header { display: flex; justify-content: space-between; align-items: center; gap
 }
 .alert svg { grid-row: span 2; width: 30px; height: 30px; }
 .alert .t { font: 800 1.5rem/1 var(--f-display); text-transform: uppercase; font-variant-numeric: tabular-nums; }
-.alert .s { font-size: .88rem; }
+.alert .s { font-size: .9rem; font-weight: 600; }
+.alert .t { font-size: 1.75rem; }
 
 .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .btn {
@@ -232,7 +237,8 @@ footer a { color: inherit; }
       '<article class="ticket' + (eProssima ? '' : ' other') + '" aria-label="' + (eProssima ? "Prossima partita" : "Partita selezionata") + '">' +
         '<div class="lake" aria-hidden="true"><span class="w"></span><span class="dot"></span></div>' +
         '<div class="eyebrow">' + (eProssima ? "Prossima partita" : "Partita selezionata") + (p.giornata ? ' <span class="pill">' + p.giornata + 'ª giornata</span>' : '') +
-          ' <span class="pill">' + (p.in_casa ? icoHome + "In casa" : icoPlane + "Trasferta") + '</span></div>' +
+          '</div>' +
+        '<div class="where ' + (p.in_casa ? 'home' : 'away') + '">' + (p.in_casa ? icoHome + "In casa" : icoPlane + "Trasferta") + '</div>' +
         '<h2 class="when">' + esc(quando(p._d, ora)) + ' · ' + hhmm(p._d) +
           '<small>' + titolo(GIORNI[p._d.getDay()]) + ' ' + p._d.getDate() + ' ' + MESI[p._d.getMonth()] + ' ' + p._d.getFullYear() + ', ritrovo ore ' + hhmm(rit) + '</small></h2>' +
         '<p class="vs"><span class="tag">' + (p.in_casa ? NOME + " contro" : NOME + " in casa di") + '</span>' + esc(p.avversario) + '</p>' +
