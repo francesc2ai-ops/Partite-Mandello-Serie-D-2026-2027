@@ -78,7 +78,7 @@ header { display: flex; justify-content: space-between; align-items: center; gap
   overflow: hidden;
 }
 /* linea dei 3 metri: dettaglio da campo di pallavolo */
-.lake { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); height: 92%; aspect-ratio: 628 / 926; max-width: 38%; z-index: 0; pointer-events: none; }
+.lake { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); height: 92%; aspect-ratio: 628 / 926; z-index: 0; pointer-events: none; }
 .lake .w { position: absolute; inset: 0; background: var(--lake); opacity: .2; -webkit-mask: url(assets/lago-como.png) center / contain no-repeat; mask: url(assets/lago-como.png) center / contain no-repeat; }
 .lake .dot { position: absolute; left: 65.9%; top: 71.6%; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 2px var(--court); }
 .ticket > :not(.lake) { position: relative; z-index: 1; }
