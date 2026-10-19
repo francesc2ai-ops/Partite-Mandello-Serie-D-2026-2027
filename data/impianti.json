@@ -1,0 +1,11 @@
+{
+  "_come_si_usa": "Chiave = 'Nome impianto - Città' come appare nella pagina. Valori: 'indirizzo' (con civico) e/o 'lat' + 'lon' (coordinate precise, hanno la precedenza). Dopo la modifica la GitHub Action rigenera partite.json.",
+  "_esempio": {
+    "indirizzo": "Via Esempio 1, Mandello del Lario LC",
+    "lat": 45.92,
+    "lon": 9.32
+  },
+  "Palestra Comunale - Gordona": {
+    "indirizzo": "Via degli Emigranti, Gordona (SO)"
+  }
+}

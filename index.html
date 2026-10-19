@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mandello Matchday</title>
+<link rel="icon" href="assets/favicon.png">
+<meta name="theme-color" content="#1c2d5e">
+<link rel="apple-touch-icon" href="assets/logo.png">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Public+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: una colonna stretta da telefono — biglietto della prossima gara, avviso ritrovo, azioni, poi il resto del calendario */
+/* Colori sociali Pol. Mandello: blu notte, crema, arancio pallone. Il lago di Como disegnato nella scheda partita */
+:root {
+  --bg: #f4eddc;             /* crema */
+  --surface: #fffaf0;
+  --ink: #17244a;            /* blu notte */
+  --muted: #5f6680;
+  --line: #e2d6bb;
+  --court: #1c2d5e;          /* blu sociale */
+  --court-ink: #fbf3e1;
+  --accent: #ee8b3a;         /* arancio pallone */
+  --alert-bg: #fde5cc;
+  --alert-ink: #6e3205;
+  --alert-edge: #ee8b3a;
+  --home: #1c2d5e;
+  --away: #c25a12;
+  --lake: #fbf3e1;
+  --f-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --f-body: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1428; --surface: #161f3b; --ink: #f4ecda; --muted: #a8afc4; --line: #29355a;
+    --court: #22386f; --court-ink: #fbf3e1; --accent: #f39a4f;
+    --alert-bg: #3a230f; --alert-ink: #ffd3a8; --alert-edge: #f39a4f;
+    --home: #9fb6f5; --away: #f5a462; --lake: #fbf3e1;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1428; --surface: #161f3b; --ink: #f4ecda; --muted: #a8afc4; --line: #29355a;
+  --court: #22386f; --court-ink: #fbf3e1; --accent: #f39a4f;
+  --alert-bg: #3a230f; --alert-ink: #ffd3a8; --alert-edge: #f39a4f;
+  --home: #9fb6f5; --away: #f5a462; --lake: #fbf3e1;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 16px/1.5 var(--f-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 40px;
+}
+main { max-width: 480px; margin: 0 auto; display: grid; gap: 16px; }
+header { display: flex; justify-content: space-between; align-items: center; gap: 10px 12px; flex-wrap: wrap; }
+.club { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.club img { width: 52px; height: 52px; border-radius: 50%; flex: none; box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent); }
+.brand { font: 800 1.6rem/1 var(--f-display); letter-spacing: .02em; text-transform: uppercase; margin: 0; }
+.brand .hl { color: var(--accent); }
+.league { font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+
+.ticket {
+  background: var(--court);
+  color: var(--court-ink);
+  border-radius: 18px;
+  padding: 20px;
+  display: grid;
+  gap: 14px;
+  position: relative;
+  overflow: hidden;
+}
+/* linea dei 3 metri: dettaglio da campo di pallavolo */
+.lake { position: absolute; right: -6px; top: 8px; height: calc(100% - 16px); width: auto; max-width: 42%; z-index: 0; pointer-events: none; }
+.lake .w { fill: none; stroke: var(--lake); stroke-opacity: .16; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+.lake .dot { fill: var(--accent); stroke: var(--court); stroke-width: 2; }
+.lake text { fill: var(--lake); fill-opacity: .7; font: 700 7px var(--f-body); letter-spacing: .08em; text-transform: uppercase; }
+.ticket > :not(.lake) { position: relative; z-index: 1; }
+.ticket { border-bottom: 5px solid var(--accent); }
+.eyebrow { font-size: .74rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; opacity: .85; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.pill { display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px; border-radius: 99px; background: rgba(255,255,255,.18); letter-spacing: .08em; }
+.when { font: 700 2.6rem/1 var(--f-display); text-transform: uppercase; margin: 0; font-variant-numeric: tabular-nums; }
+.when small { display: block; font: 600 1.05rem/1.2 var(--f-body); text-transform: none; opacity: .9; margin-top: 6px; }
+.vs { font: 700 1.55rem/1.1 var(--f-display); text-transform: uppercase; margin: 0; text-wrap: balance; }
+.vs .tag { font: 600 .8rem/1 var(--f-body); letter-spacing: .1em; opacity: .8; display: block; margin-bottom: 4px; }
+.venue { font-size: .95rem; line-height: 1.4; }
+.venue b { display: block; font-weight: 600; }
+
+.alert {
+  background: var(--alert-bg);
+  color: var(--alert-ink);
+  border-left: 5px solid var(--alert-edge);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 14px;
+  align-items: center;
+}
+.alert svg { grid-row: span 2; width: 30px; height: 30px; }
+.alert .t { font: 800 1.5rem/1 var(--f-display); text-transform: uppercase; font-variant-numeric: tabular-nums; }
+.alert .s { font-size: .88rem; }
+
+.actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 54px; padding: 10px 12px; border-radius: 12px;
+  font: 700 1.1rem/1 var(--f-display); letter-spacing: .04em; text-transform: uppercase;
+  text-decoration: none; border: 2px solid transparent;
+}
+.btn svg { width: 20px; height: 20px; flex: none; }
+.btn-maps { background: var(--surface); color: var(--ink); border-color: var(--line); }
+.btn-waze { background: var(--surface); color: var(--ink); border-color: var(--line); }
+.btn:hover { border-color: var(--accent); }
+.btn:focus-visible, a:focus-visible { outline: 3px solid var(--alert-edge); outline-offset: 2px; }
+
+section h2 { font: 700 1.05rem/1 var(--f-display); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 8px 0 8px; }
+.list { list-style: none; margin: 0; padding: 0; background: var(--surface); border-radius: 14px; border: 1px solid var(--line); }
+.list li { border-top: 1px solid var(--line); }
+.list li:first-child { border-top: 0; }
+.row { width: 100%; display: grid; grid-template-columns: 4.2rem 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; background: none; border: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.row:hover { background: color-mix(in srgb, var(--court) 7%, transparent); }
+.row.sel { background: color-mix(in srgb, var(--accent) 16%, transparent); box-shadow: inset 4px 0 0 var(--accent); }
+.list li:first-child .row { border-radius: 14px 14px 0 0; }
+.list li:last-child .row { border-radius: 0 0 14px 14px; }
+.row:focus-visible, .back:focus-visible { outline: 3px solid var(--alert-edge); outline-offset: -3px; }
+.back { justify-self: start; margin-bottom: 12px; background: var(--surface); border: 1px solid var(--line); color: var(--away); font: 600 .9rem var(--f-body); padding: 8px 14px; border-radius: 99px; cursor: pointer; }
+.ticket.other { background: color-mix(in srgb, var(--court) 78%, #000); }
+.d { display: block; font: 700 1.15rem/1 var(--f-display); font-variant-numeric: tabular-nums; text-transform: uppercase; }
+.d small { display: block; font: 500 .72rem/1.3 var(--f-body); color: var(--muted); text-transform: none; }
+.o { display: block; min-width: 0; font-weight: 600; font-size: .86rem; letter-spacing: .01em; line-height: 1.3; }
+.o small { display: block; font-weight: 400; color: var(--muted); font-size: .8rem; }
+.ha svg, .pill svg { width: 14px; height: 14px; flex: none; }
+.ha { display: inline-flex; align-items: center; gap: 5px; font: 700 .7rem/1 var(--f-body); letter-spacing: .1em; padding: 4px 7px; border-radius: 6px; border: 1.5px solid currentColor; }
+.ha.home { color: var(--home); }
+.ha.away { color: var(--away); }
+.more { width: 100%; margin-top: 8px; background: none; border: 0; color: var(--away); font: 600 .9rem var(--f-body); padding: 8px; cursor: pointer; }
+footer { font-size: .78rem; color: var(--muted); text-align: center; }
+footer a { color: inherit; }
+.empty { background: var(--surface); border-radius: 18px; padding: 24px; text-align: center; color: var(--muted); }
+@media (prefers-reduced-motion: no-preference) {
+  .ticket { animation: rise .45s ease-out both; }
+  @keyframes rise { from { transform: translateY(8px); opacity: .6; } to { transform: none; opacity: 1; } }
+}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="club"><img src="assets/logo.png" alt="Logo Pol. Mandello Volleyball" width="52" height="52"><h1 class="brand"><span id="nome">Mandello</span> <span class="hl">Matchday</span></h1></div>
+    <div class="league" id="league">Serie D Femminile · Girone C</div>
+  </header>
+  <div id="app"><div class="empty">Carico il calendario…</div></div>
+  <section id="rest-wrap" hidden>
+    <h2>Calendario</h2>
+    <ul class="list" id="rest"></ul>
+    <button class="more" id="more" type="button" hidden>Mostra tutte</button>
+  </section>
+  <footer id="foot">Dati: calendario ufficiale FIPAV Lombardia.</footer>
+</main>
+
+<!-- Se questo blocco contiene il JSON, viene usato direttamente; altrimenti si legge data/partite.json -->
+<script id="dati" type="application/json"></script>
+<script>
+(function () {
+  const GIORNI = ["domenica","lunedì","martedì","mercoledì","giovedì","venerdì","sabato"];
+  const GG = ["dom","lun","mar","mer","gio","ven","sab"];
+  const MESI = ["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
+  const DURATA_MIN = 150; // la partita resta "prossima" fino a 2h30 dopo l'inizio
+
+  const pad = n => String(n).padStart(2, "0");
+  const hhmm = d => pad(d.getHours()) + ":" + pad(d.getMinutes());
+  const parse = s => { const [a, b] = s.split("T"); const [y, m, d] = a.split("-").map(Number); const [h, mi] = b.split(":").map(Number); return new Date(y, m - 1, d, h, mi); };
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const titolo = s => s.toLowerCase().replace(/(^|[\s\-(])(\p{L})/gu, (m, a, b) => a + b.toUpperCase());
+
+  function quando(inizio, ora) {
+    const g0 = new Date(ora.getFullYear(), ora.getMonth(), ora.getDate());
+    const g1 = new Date(inizio.getFullYear(), inizio.getMonth(), inizio.getDate());
+    const diff = Math.round((g1 - g0) / 86400000);
+    if (diff <= 0) return "Oggi";
+    if (diff === 1) return "Domani";
+    return "Tra " + diff + " giorni";
+  }
+
+  const icoPin = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>';
+  const icoCar = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 16V11l2-5h10l2 5v5"/><path d="M3 16h18v2H3z"/><circle cx="7.5" cy="13" r="1"/><circle cx="16.5" cy="13" r="1"/></svg>';
+  const icoHome = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>';
+  const icoPlane = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 15.5v-2l-8-5V3.8a1.5 1.5 0 0 0-3 0v4.7l-8 5v2l8-2.5v5l-2 1.5V21l3.5-1 3.5 1v-1.5l-2-1.5v-5z"/></svg>';
+  const icoClock = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+
+  let NOME = "Mandello";
+  let scelta = null; // partita aperta dall'elenco; solo in memoria, alla riapertura si riparte dalla prossima
+
+  function render(dati) {
+    window.__dati = dati;
+    NOME = dati.nome || NOME;
+    document.getElementById("nome").textContent = NOME;
+    document.title = NOME + " Matchday";
+    const ora = new Date();
+    const ritMin = dati.ritrovo_minuti_prima || 75;
+    document.getElementById("league").textContent = (dati.campionato || "Serie D") + (dati.girone ? " · Girone " + dati.girone : "");
+    const partite = dati.partite.map(p => Object.assign({}, p, { _d: parse(p.inizio) }));
+    const future = partite.filter(p => p._d.getTime() + DURATA_MIN * 60000 > ora.getTime());
+    const app = document.getElementById("app");
+
+    if (!future.length) {
+      app.innerHTML = '<div class="empty">Stagione finita: nessuna partita in programma.</div>';
+      document.getElementById("rest-wrap").hidden = true;
+      return;
+    }
+
+    const prossima = future[0];
+    const p = future.find(x => x.inizio === scelta) || prossima;
+    const eProssima = p === prossima;
+    const rit = new Date(p._d.getTime() - ritMin * 60000);
+    const qm = p.cerca_maps || p.indirizzo_mappe, qw = p.cerca_waze || p.indirizzo_mappe;
+    const coord = /^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/.test(qw);
+    const maps = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(qm);
+    const waze = coord ? "https://waze.com/ul?ll=" + qw + "&navigate=yes" : "https://waze.com/ul?q=" + encodeURIComponent(qw) + "&navigate=yes";
+    const oreRit = Math.floor(ritMin / 60), minRit = ritMin % 60;
+    const anticipo = (oreRit ? oreRit + " ora" + (oreRit > 1 ? "e" : "") : "") + (minRit ? (oreRit ? " e " : "") + minRit + " minuti" : "");
+
+    app.innerHTML =
+      (eProssima ? '' : '<button class="back" id="back" type="button">← Torna alla prossima partita</button>') +
+      '<article class="ticket' + (eProssima ? '' : ' other') + '" aria-label="' + (eProssima ? "Prossima partita" : "Partita selezionata") + '">' +
+        '<svg class="lake" viewBox="0 0 100 140" aria-hidden="true"><path class="w" d="M55 5C51 20 58 33 53 48C50 58 51 65 50 72"/><path class="w" d="M50 72C43 85 35 92 31 104C27 116 21 124 16 134"/><path class="w" d="M50 72C59 85 65 95 69 107C72 117 75 124 78 132"/><circle class="dot" cx="69" cy="99" r="4.5"/><text x="58" y="90" text-anchor="end">Mandello</text></svg>' +
+        '<div class="eyebrow">' + (eProssima ? "Prossima partita" : "Partita selezionata") + (p.giornata ? ' <span class="pill">' + p.giornata + 'ª giornata</span>' : '') +
+          ' <span class="pill">' + (p.in_casa ? icoHome + "In casa" : icoPlane + "Trasferta") + '</span></div>' +
+        '<h2 class="when">' + esc(quando(p._d, ora)) + ' · ' + hhmm(p._d) +
+          '<small>' + titolo(GIORNI[p._d.getDay()]) + ' ' + p._d.getDate() + ' ' + MESI[p._d.getMonth()] + ' ' + p._d.getFullYear() + ', ritrovo ore ' + hhmm(rit) + '</small></h2>' +
+        '<p class="vs"><span class="tag">' + (p.in_casa ? NOME + " contro" : NOME + " in casa di") + '</span>' + esc(p.avversario) + '</p>' +
+        '<div class="venue"><b>' + esc(p.impianto) + '</b>' + esc(p.indirizzo) + '</div>' +
+      '</article>' +
+      '<div class="alert" role="note" style="margin-top:16px">' + icoClock +
+        '<div class="t">Ritrovo ore ' + hhmm(rit) + '</div>' +
+        '<div class="s">' + anticipo + ' prima dell\'inizio' + (p.in_casa ? ', in palestra.' : ', al campo.') + '</div>' +
+      '</div>' +
+      '<div class="actions" style="margin-top:16px">' +
+        '<a class="btn btn-maps" href="' + maps + '" target="_blank" rel="noopener">' + icoPin + 'Google Maps</a>' +
+        '<a class="btn btn-waze" href="' + waze + '" target="_blank" rel="noopener">' + icoCar + 'Waze</a>' +
+      '</div>';
+
+    const back = document.getElementById("back");
+    if (back) back.onclick = () => apri(null);
+
+    const ul = document.getElementById("rest");
+    const more = document.getElementById("more");
+    const riga = r => '<li><button type="button" class="row' + (r === p ? ' sel' : '') + '" data-k="' + r.inizio + '"' + (r === p ? ' aria-current="true"' : '') + '>' +
+      '<span class="d">' + pad(r._d.getDate()) + ' ' + MESI[r._d.getMonth()] + '<small>' + GG[r._d.getDay()] + ' ' + hhmm(r._d) + '</small></span>' +
+      '<span class="o">' + esc(r.avversario) + '<small>' + (r === prossima ? 'Prossima · ' : '') + esc(r.indirizzo) + '</small></span>' +
+      '<span class="ha ' + (r.in_casa ? "home" : "away") + '">' + (r.in_casa ? icoHome + "CASA" : icoPlane + "FUORI") + '</span></button></li>';
+    const quante = Math.max(5, future.indexOf(p) + 1);
+    const mostra = n => {
+      ul.innerHTML = future.slice(0, n).map(riga).join("");
+      more.hidden = future.length <= n;
+      ul.querySelectorAll(".row").forEach(b => b.onclick = () => apri(b.dataset.k));
+    };
+    document.getElementById("rest-wrap").hidden = false;
+    mostra(window.__tutte ? future.length : quante);
+    more.onclick = () => { window.__tutte = true; mostra(future.length); };
+
+    if (dati.aggiornato) {
+      const a = parse(dati.aggiornato);
+      document.getElementById("foot").textContent = "Dati: calendario ufficiale FIPAV Lombardia · aggiornato il " + a.getDate() + " " + MESI[a.getMonth()] + " " + a.getFullYear();
+    }
+  }
+
+  function apri(k) {
+    scelta = k;
+    render(window.__dati);
+    window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  }
+
+  function errore(msg) {
+    document.getElementById("app").innerHTML = '<div class="empty">' + esc(msg) + '</div>';
+  }
+
+  const inline = document.getElementById("dati").textContent.trim();
+  if (inline) {
+    try { render(JSON.parse(inline)); } catch (e) { errore("Il calendario incorporato non è leggibile."); }
+  } else {
+    fetch("data/partite.json", { cache: "no-store" })
+      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+      .then(render)
+      .catch(() => errore("Non riesco a leggere data/partite.json. Controlla che il file sia nel repository."));
+  }
+  // aggiorna da sola ogni 5 minuti (cambia la "prossima partita" dopo la gara)
+  setInterval(() => { if (window.__dati) render(window.__dati); }, 300000);
+})();
+</script>
+</body>
+</html>

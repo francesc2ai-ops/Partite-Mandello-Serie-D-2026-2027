@@ -1,0 +1,41 @@
+name: Aggiorna calendario
+
+# Parte quando carichi un nuovo Excel in data/, oppure a mano dalla scheda "Actions".
+on:
+  push:
+    paths:
+      - "data/*.xlsx"
+      - "data/impianti.json"
+      - "scripts/converti.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  converti:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installa openpyxl
+        run: pip install openpyxl
+
+      - name: Converte Excel in JSON
+        run: python scripts/converti.py data/calendario_gare.xlsx MANDELLO "Mandello"
+
+      - name: Salva partite.json se è cambiato
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898+github-actions[bot]@users.noreply.github.com"
+          git add data/partite.json
+          if git diff --cached --quiet; then
+            echo "Nessuna modifica al calendario."
+          else
+            git commit -m "Aggiorna partite.json dal calendario Excel"
+            git push
+          fi
