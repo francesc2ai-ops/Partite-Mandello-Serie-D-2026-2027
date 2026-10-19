@@ -78,10 +78,9 @@ header { display: flex; justify-content: space-between; align-items: center; gap
   overflow: hidden;
 }
 /* linea dei 3 metri: dettaglio da campo di pallavolo */
-.lake { position: absolute; right: -6px; top: 8px; height: calc(100% - 16px); width: auto; max-width: 42%; z-index: 0; pointer-events: none; }
-.lake .w { fill: none; stroke: var(--lake); stroke-opacity: .16; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
-.lake .dot { fill: var(--accent); stroke: var(--court); stroke-width: 2; }
-.lake text { fill: var(--lake); fill-opacity: .7; font: 700 7px var(--f-body); letter-spacing: .08em; text-transform: uppercase; }
+.lake { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); height: 88%; width: auto; max-width: 34%; z-index: 0; pointer-events: none; }
+.lake .w { fill: var(--lake); opacity: .16; }
+.lake .dot { fill: var(--accent); stroke: var(--court); stroke-width: .45; }
 .ticket > :not(.lake) { position: relative; z-index: 1; }
 .ticket { border-bottom: 5px solid var(--accent); }
 .eyebrow { font-size: .74rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; opacity: .85; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
@@ -231,7 +230,7 @@ footer a { color: inherit; }
     app.innerHTML =
       (eProssima ? '' : '<button class="back" id="back" type="button">← Torna alla prossima partita</button>') +
       '<article class="ticket' + (eProssima ? '' : ' other') + '" aria-label="' + (eProssima ? "Prossima partita" : "Partita selezionata") + '">' +
-        '<svg class="lake" viewBox="0 0 100 140" aria-hidden="true"><path class="w" d="M55 5C51 20 58 33 53 48C50 58 51 65 50 72"/><path class="w" d="M50 72C43 85 35 92 31 104C27 116 21 124 16 134"/><path class="w" d="M50 72C59 85 65 95 69 107C72 117 75 124 78 132"/><circle class="dot" cx="69" cy="99" r="4.5"/><title>Lago di Como, Mandello del Lario</title></svg>' +
+        '<svg class="lake" viewBox="0.8 -0.8 28.7 44.5" aria-hidden="true"><g class="w"><path d="M27.1 1.2C26.8 1.3 26.0 1.5 25.2 1.8C24.4 2.1 23.4 2.4 22.6 3.0C21.7 3.7 20.7 4.7 20.1 5.9C19.4 7.0 19.2 8.4 18.9 9.7C18.7 11.0 18.8 12.4 18.5 13.6C18.2 14.8 17.6 15.7 17.2 16.7C16.8 17.7 16.4 18.8 16.2 19.7C15.9 20.5 15.5 21.3 15.8 21.8C16.1 22.3 17.4 22.8 18.0 22.7C18.6 22.5 18.8 21.6 19.2 20.8C19.6 20.0 20.1 18.9 20.4 17.8C20.8 16.7 20.9 15.4 21.2 14.2C21.4 12.9 21.5 11.5 21.8 10.4C22.2 9.2 22.6 8.4 23.0 7.5C23.5 6.6 24.2 5.9 24.7 5.2C25.2 4.5 25.8 3.9 26.3 3.3C26.7 2.7 27.3 2.0 27.4 1.6C27.6 1.3 27.5 1.2 27.1 1.2Z"/><path d="M16.3 20.7C15.8 20.7 15.9 21.7 15.5 22.1C15.1 22.5 14.7 22.7 14.0 23.1C13.2 23.6 11.9 24.0 11.0 24.7C10.1 25.3 9.1 26.2 8.4 27.2C7.6 28.2 7.1 29.5 6.6 30.8C6.1 32.0 5.6 33.5 5.1 34.7C4.7 36.0 4.2 37.1 3.8 38.1C3.5 39.1 3.1 40.0 2.9 40.6C2.7 41.2 2.7 41.4 2.8 41.6C2.8 41.8 3.0 41.9 3.1 41.8C3.3 41.7 3.4 41.5 3.7 41.0C4.1 40.5 4.6 39.6 5.0 38.6C5.5 37.7 6.0 36.5 6.5 35.3C7.0 34.1 7.6 32.6 8.1 31.5C8.7 30.3 9.3 29.2 9.9 28.4C10.6 27.6 11.4 27.0 12.2 26.5C13.1 25.9 14.4 25.6 15.2 25.1C16.0 24.6 16.6 24.1 17.1 23.5C17.5 23.0 18.3 22.3 18.1 21.8C18.0 21.3 16.7 20.6 16.3 20.7Z"/><path d="M15.8 21.6C15.6 22.1 16.2 22.8 16.6 23.5C16.9 24.2 17.3 24.9 17.7 25.8C18.1 26.6 18.6 27.9 18.9 28.8C19.3 29.8 19.5 30.8 20.0 31.6C20.4 32.5 21.0 33.2 21.6 34.0C22.2 34.7 22.9 35.5 23.6 36.0C24.2 36.6 24.9 37.1 25.4 37.3C25.9 37.6 26.3 37.7 26.6 37.6C26.8 37.6 26.8 37.5 26.8 37.3C26.7 37.1 26.4 36.9 26.1 36.5C25.7 36.1 25.3 35.5 24.8 34.9C24.3 34.3 23.8 33.5 23.3 32.7C22.9 32.0 22.5 31.4 22.2 30.6C21.8 29.8 21.8 28.9 21.4 27.9C21.0 26.9 20.3 25.6 19.8 24.7C19.3 23.8 18.8 23.2 18.5 22.6C18.1 21.9 18.3 21.0 17.8 20.8C17.4 20.7 16.0 21.2 15.8 21.6Z"/></g><circle class="dot" cx="21.9" cy="29.8" r="1.1"/></svg>' +
         '<div class="eyebrow">' + (eProssima ? "Prossima partita" : "Partita selezionata") + (p.giornata ? ' <span class="pill">' + p.giornata + 'ª giornata</span>' : '') +
           ' <span class="pill">' + (p.in_casa ? icoHome + "In casa" : icoPlane + "Trasferta") + '</span></div>' +
         '<h2 class="when">' + esc(quando(p._d, ora)) + ' · ' + hhmm(p._d) +
